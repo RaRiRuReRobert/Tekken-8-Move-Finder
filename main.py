@@ -1,6 +1,4 @@
 from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.common.by import By
 import requests
 
 
@@ -22,40 +20,34 @@ movetable_webpage = response.text
 soup = BeautifulSoup(movetable_webpage, "html.parser")
 
 #Get all startup frames in a list
-move_startup = [startup_frames.getText().strip("i,")for startup_frames in soup.find_all(name="td", class_="field_Startup")]
-move_input = [frames.getText().strip(f"{character}-")for frames in soup.find_all(name="td", class_="field_Move")]
+#move_startup = [startup_frames.getText().strip("i,")for startup_frames in soup.find_all(name="td", class_="field_Startup")]
+#move_input = [frames.getText().strip(f"{character}-")for frames in soup.find_all(name="td", class_="field_Move")]
+
 
 result_frames = []
 result_inputs = []
 
-print(move_startup)
-print(move_input)
-#Reductive method for narrowing down which moves to display
-for frames in move_startup:
-    frame_index = move_startup.index(frames)
-    if frames == "":
-        frame_data = 1000
-    elif "~" in frames:
-        frame_data = int(frames[:2])
-    else:
-        frame_data = int(frames)
+table = soup.find_all(name="td", class_="field_Startup")
 
-    if frame_data == int(frame_search):
-        result_frames.append(move_startup[frame_index])
-        result_inputs.append(move_input[frame_index])
-        del move_startup[frame_index]
-        del move_input[frame_index]
+#additive method for narrowing down which moves to display
+for row in soup.find_all(name="tr"):
+    move_startup = soup.find(class_="field_Startup")
+    print(f"This move's amount of startup frames are: {move_startup.getText()}")
+    move_input = soup.find(class_="field_Move")
+    print(f"This move's input is: {move_input.getText()}\n")
+
+
 
 print(result_frames)
 print(result_inputs)
 
 ##Formatting##
-data = {
-    "input": "",
-    "startup frames": "",
-}
-
-all_inputs_and_frames = []
+#data = {
+#    "input": "",
+#    "startup frames": "",
+#}
+#
+#all_inputs_and_frames = []
 
 #null frames set to 1000
 
